@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Text
 import com.example.gym.theme.GymTheme
+import com.example.gym.ui.LauncherScreen
 
 class MainActivity: ComponentActivity() {
 
@@ -16,7 +17,8 @@ class MainActivity: ComponentActivity() {
         setContent {
 
             GymTheme {
-                Text(text = "Hello, World!")
+
+                LauncherScreen()
             }
         }
     }

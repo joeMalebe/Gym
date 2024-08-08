@@ -16,8 +16,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-val lightScheme = lightColorScheme()
-val darkScheme = darkColorScheme()
+val lightScheme = lightColorScheme(
+    background = background,
+    primary = primary,
+    onBackground = onBackground,
+
+)
+val darkScheme = darkColorScheme(
+    background = background,
+    primary = primary,
+    onBackground = onBackground
+)
 
 @Composable
 fun GymTheme(
@@ -40,7 +49,7 @@ fun GymTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = Color.Transparent.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 

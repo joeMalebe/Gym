@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="already_have_an_account">Already have an account? Sign in</string>
+    <string name="lets_get_started">Let\'s go</string>
+    <string name="disclamer">Please be respectful to others while using this app. Harassment, offensive language, or any form of inappropriate behavior will not be tolerated. Let\'s create a positive and welcoming environment for everyone. Violations may result in account suspension or termination. Thank you for your cooperation and understanding.</string>
+    <string name="welcome_to_gym">Train Hard. Live Strong.</string>
+</resources>

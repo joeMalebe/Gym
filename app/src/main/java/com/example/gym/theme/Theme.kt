@@ -20,13 +20,15 @@ val lightScheme = lightColorScheme(
     background = background,
     primary = primary,
     onBackground = onBackground,
-    surfaceDim = onBackgroundSecondary
+    surfaceDim = onBackgroundSecondary,
+    surfaceContainer = lightBackground
 
 )
 val darkScheme = darkColorScheme(
     background = background,
     primary = primary,
-    onBackground = onBackground
+    onBackground = onBackground,
+    surfaceContainer = lightBackground
 )
 
 @Composable

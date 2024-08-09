@@ -7,18 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val background = Color(0xFF1F2434)
-val lightBackground = Color(0xFF525f8a)
+val lightBackground = Color(0xFF2f374f)
 val primary = Color(0xFFFF6F61)
 val onBackground = Color(0xFFE0E0E0)
 val onBackgroundSecondary = Color(0xC3E0E0E0)
 
 @Composable
 fun searchFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = MaterialTheme.colorScheme.background,
+    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
     focusedLabelColor = MaterialTheme.colorScheme.onBackground,
     focusedTextColor = MaterialTheme.colorScheme.onBackground,
     focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
     unfocusedPlaceholderColor = MaterialTheme.colorScheme.surfaceDim,
     focusedPlaceholderColor = MaterialTheme.colorScheme.surfaceDim,
     unfocusedLabelColor = MaterialTheme.colorScheme.surfaceDim,

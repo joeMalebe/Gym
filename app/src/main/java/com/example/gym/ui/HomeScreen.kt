@@ -1,6 +1,7 @@
 package com.example.gym.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -10,10 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -27,9 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,7 +44,6 @@ import com.example.gym.Profile
 import com.example.gym.R
 import com.example.gym.ViewModel
 import com.example.gym.theme.GymTheme
-import com.example.gym.theme.lightBackground
 import com.example.gym.theme.searchFieldColors
 
 @Composable
@@ -71,10 +71,11 @@ fun HomeContent(
     onSearchTextChange: (String) -> Unit,
 ) {
     Column(modifier, verticalArrangement = spacedBy(16.dp)) {
-        Profile(Modifier.weight(1f), user)
-        SearchBar(search, onSearchTextChange, Modifier.weight(1f))
-        ExerciseMetrics(user.metrics, Modifier.weight(1f))
-        CurrentActivity(user.activities[1], Modifier.weight(1f))
+        Profile(Modifier.weight(0.6f, false), user)
+        SearchBar(search, onSearchTextChange, Modifier.weight(0.4f, false))
+        ExerciseMetrics(user.metrics, Modifier.weight(0.8f, false))
+        LastSeenActivity(user.activities[3], Modifier.weight(1f))
+        OtherWorkouts(user.activities, Modifier.weight(1.4f))
     }
 }
 
@@ -155,7 +156,10 @@ fun ExerciseMetrics(metrics: List<GymMetric>, modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(metrics) {
-                Column(horizontalAlignment = Alignment.Start) {
+                Column(
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = spacedBy(8.dp)
+                ) {
                     Image(painter = painterResource(id = it.image), contentDescription = it.title)
                     Text(text = it.value, style = MaterialTheme.typography.bodyMedium)
                     Text(text = it.title, style = MaterialTheme.typography.bodyMedium)
@@ -166,7 +170,7 @@ fun ExerciseMetrics(metrics: List<GymMetric>, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CurrentActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
+fun LastSeenActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Image(
             painter = painterResource(id = gymActivity.imageOverlay),
@@ -193,20 +197,89 @@ fun CurrentActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
 }
 
 @Composable
-@Preview(showSystemUi = true)
+fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
+
+    Column(modifier.fillMaxSize(), verticalArrangement = spacedBy(16.dp)) {
+        Text(
+            text = stringResource(id = R.string.other_workouts),
+            style = MaterialTheme.typography.titleMedium
+        )
+        LazyRow(horizontalArrangement = spacedBy(16.dp)) {
+            items(workouts) {
+                Card(
+                    onClick = { /*TODO*/ },
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                    modifier = Modifier.width(280.dp)
+                ) {
+                    Column(Modifier.padding(16.dp)) {
+                        Box(
+                            Modifier
+                                .weight(0.8f)
+                                .fillMaxSize()
+                        ) {
+                            Image(
+                                painter = painterResource(id = it.image),
+                                contentDescription = it.title,
+                                modifier = Modifier
+                                    .clip(MaterialTheme.shapes.medium)
+                                    .fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                        Column(Modifier.weight(0.2f)) {
+                            Text(
+                                text = it.title,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+
+                            Row(horizontalArrangement = spacedBy(8.dp)) {
+
+                                TextItem(
+                                    text = it.time.toString(),
+                                )
+
+                                TextItem(
+                                    text = it.calorieBurns,
+                                )
+
+                                TextItem(
+                                    text = stringResource(
+                                        id = R.string.current_exercise, it.exercises
+                                    ),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TextItem(text: String) {
+    Row(horizontalArrangement = spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.surfaceDim,
+            style = MaterialTheme.typography.titleSmall
+        )
+
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .background(MaterialTheme.colorScheme.primary, CircleShape)
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true, heightDp = 1000)
 fun HomeScreenPreview() {
     GymTheme {
         HomeScreen()
     }
 }
-
-val grayScaleMatrix = ColorMatrix(
-    floatArrayOf(
-        0.33f, 0.33f, 0.33f, 0f, 0f,
-        0.33f, 0.33f, 0.33f, 0f, 0f,
-        0.33f, 0.33f, 0.33f, 0f, 0f,
-        0f, 0f, 0f, 1f, 0f
-    )
-)
 
 

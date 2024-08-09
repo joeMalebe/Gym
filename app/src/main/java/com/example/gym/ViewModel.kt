@@ -59,7 +59,7 @@ class ViewModel {
                 ),
                 "150 kcal",
                 R.drawable.pic_4,
-                R.drawable.pic_4
+                R.drawable.pic_4_ov
             )
         )
     )

@@ -10,4 +10,5 @@
     <string name="search">workout…</string>
     <string name="current_exercise">%s exercises</string>
     <string name="monitoring">Daily performance</string>
+    <string name="other_workouts">Other workouts</string>
 </resources>

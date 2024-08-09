@@ -1,7 +1,5 @@
 package com.example.gym
 
-import androidx.annotation.DrawableRes
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 const val RUNNING = 1
@@ -11,12 +9,13 @@ const val CORE = 4
 
 class ViewModel {
     fun getUser() = Profile(
-        "John Doe", R.drawable.profile, metrics =
+        "Zoe Dube", R.drawable.profile_2, metrics =
         listOf(
             GymMetric("Daily calories", "520", R.drawable.monitor1),
             GymMetric("Night runs", "25 km", R.drawable.monitor2),
             GymMetric("Total workouts", "2 w 3 days", R.drawable.monitor3),
-        ), activities = listOf(
+        ),
+        activities = listOf(
             GymActivity(
                 RUNNING,
                 "Running",
@@ -157,30 +156,4 @@ class ViewModel {
         )
 
 }
-
-data class Profile(
-    val name: String,
-    @DrawableRes val profilePic: Int,
-    val metrics: List<GymMetric>,
-    val activities: List<GymActivity>
-)
-
-data class GymMetric(val title: String, val value: String, @DrawableRes val image: Int)
-
-data class GymActivity(
-    val id: Int,
-    val title: String,
-    val time: Duration,
-    val exercises: Int,
-    val calorieBurns: String,
-    @DrawableRes val image: Int,
-    @DrawableRes val imageOverlay: Int,
-
-)
-
-data class Exercise(
-    val lessonNumber: Int,
-    val duration: Duration,
-    @DrawableRes val image: Int,
-)
 

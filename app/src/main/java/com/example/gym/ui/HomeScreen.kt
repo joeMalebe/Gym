@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -67,7 +71,10 @@ fun HomeScreen(
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
-        Column {
+        Box(
+            Modifier
+                .fillMaxSize()
+        ) {
             HomeContent(
                 viewModel.getUser(),
                 search = search,
@@ -87,19 +94,22 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     onSearchTextChange: (String) -> Unit,
 ) {
-    Column(modifier, verticalArrangement = spacedBy(16.dp)) {
-        Profile(Modifier.weight(0.6f, false), user)
-        SearchBar(search, onSearchTextChange, Modifier.weight(0.4f, false))
-        ExerciseMetrics(user.metrics, Modifier.weight(0.8f, false))
-        LastSeenActivity(user.activities[3], Modifier.weight(1f))
-        OtherWorkouts(user.activities, Modifier.weight(1.4f))
+    LazyColumn(
+        modifier,
+        verticalArrangement = spacedBy(16.dp)
+    ) {
+        item { Profile(user) }
+        item { SearchBar(search, onSearchTextChange) }
+        item { ExerciseMetrics(user.metrics) }
+        item { LastSeenActivity(user.activities[3]) }
+        item { OtherWorkouts(user.activities) }
     }
 }
 
 @Composable
 private fun Profile(
-    modifier: Modifier,
-    user: Profile
+    user: Profile,
+    modifier: Modifier = Modifier,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -124,7 +134,7 @@ private fun Profile(
 
         Box(modifier = Modifier.size(56.dp)) {
             Image(
-                painter = painterResource(id = R.drawable.profile),
+                painter = painterResource(id = user.profilePic),
                 contentDescription = "profile picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -141,7 +151,7 @@ private fun SearchBar(
     onSearchTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         OutlinedTextField(
             value = search,
             onValueChange = onSearchTextChange,
@@ -163,13 +173,13 @@ private fun SearchBar(
 
 @Composable
 fun ExerciseMetrics(metrics: List<GymMetric>, modifier: Modifier = Modifier) {
-    Column(modifier.fillMaxWidth(), verticalArrangement = spacedBy(16.dp)) {
+    Column(modifier.fillMaxSize(), verticalArrangement = spacedBy(16.dp)) {
         Text(
             text = stringResource(id = R.string.monitoring),
             style = MaterialTheme.typography.titleMedium
         )
         LazyRow(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(metrics) {
@@ -188,7 +198,7 @@ fun ExerciseMetrics(metrics: List<GymMetric>, modifier: Modifier = Modifier) {
 
 @Composable
 fun LastSeenActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = gymActivity.imageOverlay),
             contentDescription = gymActivity.title,
@@ -216,7 +226,7 @@ fun LastSeenActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
 @Composable
 fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
 
-    Column(modifier.fillMaxSize(), verticalArrangement = spacedBy(16.dp)) {
+    Column(modifier.heightIn(min = 200.dp, max = 320.dp), verticalArrangement = spacedBy(16.dp)) {
         Text(
             text = stringResource(id = R.string.other_workouts),
             style = MaterialTheme.typography.titleMedium

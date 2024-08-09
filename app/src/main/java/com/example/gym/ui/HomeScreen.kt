@@ -13,13 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,6 +44,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.gym.GymActivity
 import com.example.gym.GymMetric
 import com.example.gym.Profile
@@ -45,21 +54,29 @@ import com.example.gym.R
 import com.example.gym.ViewModel
 import com.example.gym.theme.GymTheme
 import com.example.gym.theme.searchFieldColors
+import com.example.gym.ui.navigation.Screen
 
 @Composable
-fun HomeScreen(viewModel: ViewModel = ViewModel()) {
+fun HomeScreen(
+    viewModel: ViewModel = ViewModel(),
+    navController: NavHostController = rememberNavController()
+) {
     var search by remember {
         mutableStateOf("")
     }
-    Scaffold { paddingValues ->
-        HomeContent(
-            viewModel.getUser(),
-            search = search,
-            Modifier
-                .padding(paddingValues)
-                .padding(16.dp),
-            onSearchTextChange = { search = it },
-        )
+    Scaffold(
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { paddingValues ->
+        Column {
+            HomeContent(
+                viewModel.getUser(),
+                search = search,
+                Modifier
+                    .padding(paddingValues)
+                    .padding(16.dp),
+                onSearchTextChange = { search = it },
+            )
+        }
     }
 }
 
@@ -211,7 +228,7 @@ fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
                     modifier = Modifier.width(280.dp)
                 ) {
-                    Column(Modifier.padding(16.dp)) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = spacedBy(8.dp)) {
                         Box(
                             Modifier
                                 .weight(0.8f)
@@ -226,7 +243,7 @@ fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
                                 contentScale = ContentScale.Crop
                             )
                         }
-                        Column(Modifier.weight(0.2f)) {
+                        Column(Modifier.weight(0.2f), verticalArrangement = spacedBy(8.dp)) {
                             Text(
                                 text = it.title,
                                 color = MaterialTheme.colorScheme.onBackground,
@@ -258,6 +275,48 @@ fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
 }
 
 @Composable
+private fun BottomNavigationBar(navController: NavHostController) {
+    Column {
+        HorizontalDivider()
+
+        NavigationBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.primary,
+            tonalElevation = 8.dp
+        ) {
+
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            Screen.entries.filter { it != Screen.Launcher }.forEach {
+                val selected = currentRoute == it.route
+                NavigationBarItem(selected = selected, onClick = { /*TODO*/ }, icon = {
+                    Icon(
+                        painter = painterResource(id = it.icon),
+                        contentDescription = stringResource(id = it.label),
+
+                        modifier = Modifier.size(24.dp),
+                    )
+                }, label = {
+                    NavLabelTextItem(text = stringResource(id = it.label))
+                },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+                        unselectedTextColor = MaterialTheme.colorScheme.surfaceDim,
+                        indicatorColor = Color.Transparent
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun TextItem(text: String) {
     Row(horizontalArrangement = spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -272,6 +331,19 @@ private fun TextItem(text: String) {
                 .background(MaterialTheme.colorScheme.primary, CircleShape)
         )
     }
+}
+
+@Composable
+private fun NavLabelTextItem(text: String, modifier: Modifier = Modifier) {
+
+    Box(modifier = modifier) {
+        Text(
+            text = text,
+
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+
 }
 
 @Composable

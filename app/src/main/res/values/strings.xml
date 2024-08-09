@@ -11,4 +11,8 @@
     <string name="current_exercise">%s exercises</string>
     <string name="monitoring">Daily performance</string>
     <string name="other_workouts">Other workouts</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="cart">Cart</string>
+    <string name="favorites">Favourites</string>
 </resources>

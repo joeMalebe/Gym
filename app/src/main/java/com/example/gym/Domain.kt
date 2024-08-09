@@ -20,7 +20,8 @@ data class GymActivity(
     val calorieBurns: String,
     @DrawableRes val image: Int,
     @DrawableRes val imageOverlay: Int,
-
+    val level: String,
+    val description: String
     )
 
 data class Exercise(

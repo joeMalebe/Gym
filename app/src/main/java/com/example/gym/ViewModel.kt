@@ -26,6 +26,8 @@ class ViewModel {
                 "300 kcal",
                 R.drawable.pic_1,
                 R.drawable.pic_1_ov,
+                "Intermediate",
+                "Boost endurance in ${getActivityDuration(RUNNING)} of steady-paced running. Clear your mind, strengthen your body, and feel the freedom."
             ),
             GymActivity(
                 STRENGTH,
@@ -37,6 +39,8 @@ class ViewModel {
                 "500 kcal",
                 R.drawable.pic_2,
                 R.drawable.pic_2_ov,
+                "Advanced",
+                "Challenge your limits with ${getActivityDuration(STRENGTH)}of intense strength training. Build muscle, burn fat, and elevate your performance."
             ),
             GymActivity(
                 YOGA,
@@ -48,6 +52,8 @@ class ViewModel {
                 "200 kcal",
                 R.drawable.pic_3,
                 R.drawable.pic_3_ov,
+                "Novice",
+                "Relax and stretch with ${getActivityDuration(YOGA)} of gentle yoga. Perfect for beginners to find balance and inner peace."
             ),
             GymActivity(
                 CORE,
@@ -58,7 +64,9 @@ class ViewModel {
                 ),
                 "150 kcal",
                 R.drawable.pic_4,
-                R.drawable.pic_4_ov
+                R.drawable.pic_4_ov,
+                "Intermediate",
+                "Strengthen your core in just ${getActivityDuration(CORE)}. Build stability and enhance every movement with this focused, intermediate workout."
             )
         )
     )

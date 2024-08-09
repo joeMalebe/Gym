@@ -5,4 +5,6 @@
     <string name="lets_get_started">Let\'s go</string>
     <string name="disclamer">Please be respectful to others while using this app. Harassment, offensive language, or any form of inappropriate behavior will not be tolerated.</string>
     <string name="welcome_to_gym">Train Hard. Live Strong.</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="lesson">Lesson %s</string>
 </resources>

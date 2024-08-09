@@ -20,6 +20,7 @@ val lightScheme = lightColorScheme(
     background = background,
     primary = primary,
     onBackground = onBackground,
+    surfaceDim = onBackgroundSecondary
 
 )
 val darkScheme = darkColorScheme(

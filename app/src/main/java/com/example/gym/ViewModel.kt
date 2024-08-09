@@ -7,6 +7,7 @@ import kotlin.time.Duration.Companion.minutes
 const val RUNNING = 1
 const val STRENGTH = 2
 const val YOGA = 3
+const val CORE = 4
 
 class ViewModel {
     fun getUser() = Profile(
@@ -20,7 +21,9 @@ class ViewModel {
                 RUNNING,
                 "Running",
                 getActivityDuration(RUNNING),
-                "4 laps",
+                getNumberOfExercises(
+                    RUNNING
+                ),
                 "300 kcal",
                 R.drawable.pic_1
             ),
@@ -28,16 +31,39 @@ class ViewModel {
                 STRENGTH,
                 "Strength",
                 getActivityDuration(STRENGTH),
-                "10 km",
+                getNumberOfExercises(
+                    STRENGTH
+                ),
                 "500 kcal",
                 R.drawable.pic_2
             ),
             GymActivity(
-                YOGA, "Yoga", getActivityDuration(YOGA), "60 poses", "200 kcal", R.drawable.pic_3
+                YOGA,
+                "Yoga",
+                getActivityDuration(YOGA),
+                getNumberOfExercises(
+                    YOGA
+                ),
+                "200 kcal",
+                R.drawable.pic_3
+            ),
+            GymActivity(
+                CORE,
+                "Core",
+                getActivityDuration(CORE),
+                getNumberOfExercises(
+                    CORE
+                ),
+                "150 kcal",
+                R.drawable.pic_4
             )
         )
     )
 
+
+    fun getNumberOfExercises(
+        activityId: Int
+    ) = getExercises(activityId).count()
 
     fun getUserGymActivities() = getUser().activities
 
@@ -124,7 +150,7 @@ data class GymActivity(
     val id: Int,
     val title: String,
     val time: Duration,
-    val repetition: String,
+    val exercises: Int,
     val calorieBurns: String,
     @DrawableRes val image: Int
 )

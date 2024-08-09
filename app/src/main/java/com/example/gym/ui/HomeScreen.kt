@@ -2,20 +2,22 @@ package com.example.gym.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,10 +32,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.gym.GymMetric
 import com.example.gym.Profile
 import com.example.gym.R
 import com.example.gym.ViewModel
 import com.example.gym.theme.GymTheme
+import com.example.gym.theme.searchFieldColors
 
 @Composable
 fun HomeScreen(viewModel: ViewModel = ViewModel()) {
@@ -59,8 +63,42 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     onSearchTextChange: (String) -> Unit,
 ) {
-    Column(modifier) {
+    Column(modifier, verticalArrangement = spacedBy(16.dp)) {
         Profile(Modifier.weight(1f), user)
+        SearchBar(search, onSearchTextChange, Modifier.weight(1f))
+        ExerciseMetrics(user.metrics, Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun ExerciseMetrics(metrics: List<GymMetric>, modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxWidth(), verticalArrangement = spacedBy(16.dp)) {
+        Text(
+            text = stringResource(id = R.string.monitoring),
+            style = MaterialTheme.typography.titleMedium
+        )
+        LazyRow(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            items(metrics) {
+                Column(horizontalAlignment = Alignment.Start) {
+                    Image(painter = painterResource(id = it.image), contentDescription = it.title)
+                    Text(text = it.value, style = MaterialTheme.typography.bodyMedium)
+                    Text(text = it.title, style = MaterialTheme.typography.bodyMedium)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SearchBar(
+    search: String,
+    onSearchTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
         OutlinedTextField(
             value = search,
             onValueChange = onSearchTextChange,
@@ -74,25 +112,8 @@ fun HomeContent(
                     contentDescription = "search",
                 )
             },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                focusedIndicatorColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.surfaceDim,
-                focusedPlaceholderColor = MaterialTheme.colorScheme.surfaceDim,
-                unfocusedLabelColor = MaterialTheme.colorScheme.surfaceDim,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.surfaceDim,
-                unfocusedTextColor = MaterialTheme.colorScheme.surfaceDim,
-                unfocusedTrailingIconColor = MaterialTheme.colorScheme.surfaceDim,
-                focusedTrailingIconColor = MaterialTheme.colorScheme.onBackground,
-                cursorColor = MaterialTheme.colorScheme.onBackground,
-                selectionColors = TextSelectionColors(
-                    handleColor = MaterialTheme.colorScheme.onBackground,
-                    backgroundColor = MaterialTheme.colorScheme.background
-                )
-            )
+            colors = searchFieldColors(),
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
@@ -112,15 +133,18 @@ private fun Profile(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = stringResource(id = R.string.welcome_back))
+            Text(
+                text = stringResource(id = R.string.welcome_back),
+                style = MaterialTheme.typography.titleSmall
+            )
             Text(
                 text = user.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
         }
 
-        Box(modifier = Modifier.size(48.dp)) {
+        Box(modifier = Modifier.size(56.dp)) {
             Image(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = "profile picture",

@@ -101,7 +101,7 @@ fun HomeContent(
         item { Profile(user) }
         item { SearchBar(search, onSearchTextChange) }
         item { ExerciseMetrics(user.metrics) }
-        item { LastSeenActivity(user.activities[3]) }
+        item { LastSeenActivity(user.lastSeen) }
         item { OtherWorkouts(user.activities) }
     }
 }

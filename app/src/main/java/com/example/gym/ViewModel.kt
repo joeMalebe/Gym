@@ -15,59 +15,62 @@ class ViewModel {
             GymMetric("Night runs", "25 km", R.drawable.monitor2),
             GymMetric("Total workouts", "2 w 3 days", R.drawable.monitor3),
         ),
-        activities = listOf(
-            GymActivity(
-                RUNNING,
-                "Running",
-                getActivityDuration(RUNNING),
-                getNumberOfExercises(
-                    RUNNING
-                ),
-                "300 kcal",
-                R.drawable.pic_1,
-                R.drawable.pic_1_ov,
-                "Intermediate",
-                "Boost endurance in ${getActivityDuration(RUNNING)} of steady-paced running. Clear your mind, strengthen your body, and feel the freedom."
+        lastSeen = gymActivities().last(),
+        activities = gymActivities()
+    )
+
+    private fun gymActivities() = listOf(
+        GymActivity(
+            RUNNING,
+            "Running",
+            getActivityDuration(RUNNING),
+            getNumberOfExercises(
+                RUNNING
             ),
-            GymActivity(
-                STRENGTH,
-                "Strength",
-                getActivityDuration(STRENGTH),
-                getNumberOfExercises(
-                    STRENGTH
-                ),
-                "500 kcal",
-                R.drawable.pic_2,
-                R.drawable.pic_2_ov,
-                "Advanced",
-                "Challenge your limits with ${getActivityDuration(STRENGTH)}of intense strength training. Build muscle, burn fat, and elevate your performance."
+            "300 kcal",
+            R.drawable.pic_1,
+            R.drawable.pic_1_ov,
+            "Intermediate",
+            "Boost endurance in ${getActivityDuration(RUNNING)} of steady-paced running. Clear your mind, strengthen your body, and feel the freedom."
+        ),
+        GymActivity(
+            STRENGTH,
+            "Strength",
+            getActivityDuration(STRENGTH),
+            getNumberOfExercises(
+                STRENGTH
             ),
-            GymActivity(
-                YOGA,
-                "Yoga",
-                getActivityDuration(YOGA),
-                getNumberOfExercises(
-                    YOGA
-                ),
-                "200 kcal",
-                R.drawable.pic_3,
-                R.drawable.pic_3_ov,
-                "Novice",
-                "Relax and stretch with ${getActivityDuration(YOGA)} of gentle yoga. Perfect for beginners to find balance and inner peace."
+            "500 kcal",
+            R.drawable.pic_2,
+            R.drawable.pic_2_ov,
+            "Advanced",
+            "Challenge your limits with ${getActivityDuration(STRENGTH)}of intense strength training. Build muscle, burn fat, and elevate your performance."
+        ),
+        GymActivity(
+            YOGA,
+            "Yoga",
+            getActivityDuration(YOGA),
+            getNumberOfExercises(
+                YOGA
             ),
-            GymActivity(
-                CORE,
-                "Core",
-                getActivityDuration(CORE),
-                getNumberOfExercises(
-                    CORE
-                ),
-                "150 kcal",
-                R.drawable.pic_4,
-                R.drawable.pic_4_ov,
-                "Intermediate",
-                "Strengthen your core in just ${getActivityDuration(CORE)}. Build stability and enhance every movement with this focused, intermediate workout."
-            )
+            "200 kcal",
+            R.drawable.pic_3,
+            R.drawable.pic_3_ov,
+            "Novice",
+            "Relax and stretch with ${getActivityDuration(YOGA)} of gentle yoga. Perfect for beginners to find balance and inner peace."
+        ),
+        GymActivity(
+            CORE,
+            "Core",
+            getActivityDuration(CORE),
+            getNumberOfExercises(
+                CORE
+            ),
+            "150 kcal",
+            R.drawable.pic_4,
+            R.drawable.pic_4_ov,
+            "Intermediate",
+            "Strengthen your core in just ${getActivityDuration(CORE)}. Build stability and enhance every movement with this focused, intermediate workout."
         )
     )
 

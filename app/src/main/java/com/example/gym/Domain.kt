@@ -7,7 +7,8 @@ data class Profile(
     val name: String,
     @DrawableRes val profilePic: Int,
     val metrics: List<GymMetric>,
-    val activities: List<GymActivity>
+    val activities: List<GymActivity>,
+    val lastSeen: GymActivity
 )
 
 data class GymMetric(val title: String, val value: String, @DrawableRes val image: Int)

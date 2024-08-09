@@ -18,9 +18,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -58,6 +56,7 @@ import com.example.gym.R
 import com.example.gym.ViewModel
 import com.example.gym.theme.GymTheme
 import com.example.gym.theme.searchFieldColors
+import com.example.gym.ui.navigation.BottomNavScreen
 import com.example.gym.ui.navigation.Screen
 
 @Composable
@@ -78,10 +77,13 @@ fun HomeScreen(
             HomeContent(
                 viewModel.getUser(),
                 search = search,
-                Modifier
+                modifier = Modifier
                     .padding(paddingValues)
                     .padding(16.dp),
                 onSearchTextChange = { search = it },
+                onWorkoutSelected = {
+                    navController.navigate(Screen.Workout.route.replace("{id}", it.id.toString()))
+                }
             )
         }
     }
@@ -91,8 +93,9 @@ fun HomeScreen(
 fun HomeContent(
     user: Profile,
     search: String,
-    modifier: Modifier = Modifier,
     onSearchTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    onWorkoutSelected: (GymActivity) -> Unit,
 ) {
     LazyColumn(
         modifier,
@@ -102,7 +105,7 @@ fun HomeContent(
         item { SearchBar(search, onSearchTextChange) }
         item { ExerciseMetrics(user.metrics) }
         item { LastSeenActivity(user.lastSeen) }
-        item { OtherWorkouts(user.activities) }
+        item { OtherWorkouts(user.activities, onWorkoutSelected = onWorkoutSelected) }
     }
 }
 
@@ -224,7 +227,11 @@ fun LastSeenActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
+fun OtherWorkouts(
+    workouts: List<GymActivity>,
+    modifier: Modifier = Modifier,
+    onWorkoutSelected: (GymActivity) -> Unit
+) {
 
     Column(modifier.heightIn(min = 200.dp, max = 320.dp), verticalArrangement = spacedBy(16.dp)) {
         Text(
@@ -234,7 +241,7 @@ fun OtherWorkouts(workouts: List<GymActivity>, modifier: Modifier = Modifier) {
         LazyRow(horizontalArrangement = spacedBy(16.dp)) {
             items(workouts) {
                 Card(
-                    onClick = { /*TODO*/ },
+                    onClick = { onWorkoutSelected(it) },
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
                     modifier = Modifier.width(280.dp)
                 ) {
@@ -301,7 +308,7 @@ private fun BottomNavigationBar(navController: NavHostController) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
-            Screen.entries.filter { it != Screen.Launcher }.forEach {
+            BottomNavScreen.entries.forEach {
                 val selected = currentRoute == it.route
                 NavigationBarItem(selected = selected, onClick = { /*TODO*/ }, icon = {
                     Icon(

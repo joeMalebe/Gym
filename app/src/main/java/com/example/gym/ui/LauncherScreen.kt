@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.example.gym.R
 import com.example.gym.theme.GymTheme
 import com.example.gym.theme.onBackgroundSecondary
-import com.example.gym.ui.navigation.Screen
 
 @Composable
 fun LauncherScreen(onLetsGoClicked: () -> Unit) {

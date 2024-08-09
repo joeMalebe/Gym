@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val background = Color(0xFF1F2434)
+val lightBackground = Color(0xFF525f8a)
 val primary = Color(0xFFFF6F61)
 val onBackground = Color(0xFFE0E0E0)
 val onBackgroundSecondary = Color(0xC3E0E0E0)

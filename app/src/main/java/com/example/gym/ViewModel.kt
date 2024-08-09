@@ -25,7 +25,8 @@ class ViewModel {
                     RUNNING
                 ),
                 "300 kcal",
-                R.drawable.pic_1
+                R.drawable.pic_1,
+                R.drawable.pic_1_ov,
             ),
             GymActivity(
                 STRENGTH,
@@ -35,7 +36,8 @@ class ViewModel {
                     STRENGTH
                 ),
                 "500 kcal",
-                R.drawable.pic_2
+                R.drawable.pic_2,
+                R.drawable.pic_2_ov,
             ),
             GymActivity(
                 YOGA,
@@ -45,7 +47,8 @@ class ViewModel {
                     YOGA
                 ),
                 "200 kcal",
-                R.drawable.pic_3
+                R.drawable.pic_3,
+                R.drawable.pic_3_ov,
             ),
             GymActivity(
                 CORE,
@@ -55,6 +58,7 @@ class ViewModel {
                     CORE
                 ),
                 "150 kcal",
+                R.drawable.pic_4,
                 R.drawable.pic_4
             )
         )
@@ -132,6 +136,23 @@ class ViewModel {
                     40.minutes,
                     R.drawable.pic_3_4
                 )
+            ),
+            4 to listOf(
+                Exercise(
+                    1,
+                    20.minutes,
+                    R.drawable.pic_4_1
+                ),
+                Exercise(
+                    2,
+                    15.minutes,
+                    R.drawable.pic_4_2
+                ),
+                Exercise(
+                    3,
+                    30.minutes,
+                    R.drawable.pic_4_3
+                ),
             )
         )
 
@@ -152,7 +173,9 @@ data class GymActivity(
     val time: Duration,
     val exercises: Int,
     val calorieBurns: String,
-    @DrawableRes val image: Int
+    @DrawableRes val image: Int,
+    @DrawableRes val imageOverlay: Int,
+
 )
 
 data class Exercise(

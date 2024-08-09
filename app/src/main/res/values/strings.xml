@@ -7,6 +7,7 @@
     <string name="welcome_to_gym">Train Hard. Live Strong.</string>
     <string name="welcome_back">Welcome back</string>
     <string name="lesson">Lesson %s</string>
-    <string name="search">workout...</string>
+    <string name="search">workout…</string>
+    <string name="current_exercise">%s exercises</string>
     <string name="monitoring">Daily performance</string>
 </resources>

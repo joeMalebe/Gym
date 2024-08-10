@@ -80,6 +80,8 @@ class ViewModel {
     ) = getExercises(activityId).count()
 
     fun getUserGymActivities() = getUser().activities
+    fun getUserGymActivities(activityId: Int) = getUser().activities.find { it.id == activityId }
+        ?: throw IllegalArgumentException("Activity $activityId not found")
 
     fun getActivityDuration(activityId: Int) = getExerciseDuration(activityId)
 

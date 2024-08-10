@@ -1,5 +1,12 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.gym.ui
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,13 +64,15 @@ import com.example.gym.ViewModel
 import com.example.gym.theme.GymTheme
 import com.example.gym.theme.searchFieldColors
 import com.example.gym.ui.navigation.BottomNavScreen
-import com.example.gym.ui.navigation.Screen
 import kotlin.time.Duration
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeScreen(
+fun SharedTransitionScope.HomeScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ViewModel = ViewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onWorkoutSelected: (GymActivity) -> Unit
 ) {
     var search by remember {
         mutableStateOf("")
@@ -82,21 +91,21 @@ fun HomeScreen(
                     .padding(paddingValues)
                     .padding(16.dp),
                 onSearchTextChange = { search = it },
-                onWorkoutSelected = {
-                    navController.navigate(Screen.Workout.route.replace("{id}", it.id.toString()))
-                }
+                onWorkoutSelected = onWorkoutSelected,
+                animatedVisibilityScope = animatedVisibilityScope
             )
         }
     }
 }
 
 @Composable
-fun HomeContent(
+fun SharedTransitionScope.HomeContent(
     user: Profile,
     search: String,
     onSearchTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onWorkoutSelected: (GymActivity) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     LazyColumn(
         modifier,
@@ -106,7 +115,13 @@ fun HomeContent(
         item { SearchBar(search, onSearchTextChange) }
         item { ExerciseMetrics(user.metrics) }
         item { LastSeenActivity(user.lastSeen) }
-        item { OtherWorkouts(user.activities, onWorkoutSelected = onWorkoutSelected) }
+        item {
+            OtherWorkouts(
+                user.activities,
+                onWorkoutSelected = onWorkoutSelected,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
     }
 }
 
@@ -228,10 +243,11 @@ fun LastSeenActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun OtherWorkouts(
+fun SharedTransitionScope.OtherWorkouts(
     workouts: List<GymActivity>,
     modifier: Modifier = Modifier,
-    onWorkoutSelected: (GymActivity) -> Unit
+    onWorkoutSelected: (GymActivity) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
     Column(modifier.heightIn(min = 200.dp, max = 320.dp), verticalArrangement = spacedBy(16.dp)) {
@@ -257,7 +273,18 @@ fun OtherWorkouts(
                                 contentDescription = it.title,
                                 modifier = Modifier
                                     .clip(MaterialTheme.shapes.medium)
-                                    .fillMaxSize(),
+                                    .fillMaxSize()
+                                    .sharedElement(
+                                        state = rememberSharedContentState(
+                                            key = "image/${it.id}"
+                                        ), animatedVisibilityScope = animatedVisibilityScope,
+                                        boundsTransform = { _, _ ->
+                                            tween(
+                                                durationMillis = 500,
+                                                easing = FastOutLinearInEasing
+                                            )
+                                        }
+                                    ),
                                 contentScale = ContentScale.Crop
                             )
                         }
@@ -378,7 +405,9 @@ private fun NavLabelTextItem(text: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true, heightDp = 1000)
 fun HomeScreenPreview() {
     GymTheme {
-        HomeScreen()
+        /*HomeScreen(
+            animatedVisibilityScope = ,
+        )*/
     }
 }
 

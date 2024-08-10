@@ -1,17 +1,24 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.gym.ui
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.Bottom
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,10 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,28 +50,27 @@ import com.example.gym.ViewModel
 import com.example.gym.theme.GymTheme
 
 @Composable
-fun WorkoutScreen(
+fun SharedTransitionScope.WorkoutScreen(
     gymActivityId: Int,
     viewModel: ViewModel = ViewModel(),
-    navHostController: NavHostController = rememberNavController()
+    onBackClick: () -> Unit,
+    animatedVisibilityScope: AnimatedContentScope
 ) {
-    val gymActivity = viewModel.getUserGymActivities().find { it.id == gymActivityId }
+    val gymActivity = viewModel.getUserGymActivities(activityId = gymActivityId)
     val exercises = viewModel.getExercises(gymActivityId)
     Scaffold { paddingValues ->
         Box(
             Modifier
                 .padding(paddingValues)
         ) {
-            when {
-                gymActivity != null -> WorkoutScreenContent(
+
+            WorkoutScreenContent(
                     modifier = Modifier.padding(16.dp),
                     gymActivity = gymActivity,
-                    exercises = exercises
+                exercises = exercises,
+                animatedVisibilityScope = animatedVisibilityScope
                 )
-
-                else -> Unit
-            }
-            MenuItems(onBackClick = { navHostController.popBackStack() })
+            MenuItems(onBackClick = onBackClick)
 
         }
     }
@@ -98,10 +101,11 @@ private fun MenuItems(onBackClick: () -> Unit) {
 }
 
 @Composable
-fun WorkoutScreenContent(
+fun SharedTransitionScope.WorkoutScreenContent(
     gymActivity: GymActivity,
     exercises: List<Exercise>,
     modifier: Modifier = Modifier,
+    animatedVisibilityScope: AnimatedContentScope,
 ) {
     Column(Modifier.fillMaxWidth()) {
         Box(
@@ -113,7 +117,18 @@ fun WorkoutScreenContent(
                 painter = painterResource(id = gymActivity.image),
                 contentDescription = gymActivity.title,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .sharedElement(
+                        state = rememberSharedContentState(key = "image/${gymActivity.id}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        boundsTransform = { _, _ ->
+                            tween(
+                                durationMillis = 500,
+                                easing = FastOutLinearInEasing
+                            )
+                        }
+                    )
             )
 
             Box(
@@ -226,6 +241,6 @@ private fun GymActivityFacts(gymActivity: GymActivity, modifier: Modifier = Modi
 fun WorkoutScreenPreview() {
     GymTheme {
 
-        WorkoutScreen(4)
+        //WorkoutScreen(4, animatedVisibilityScope = this)
     }
 }

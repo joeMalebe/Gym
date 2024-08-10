@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.gym.ui.HomeScreen
 import com.example.gym.ui.LauncherScreen
+import com.example.gym.ui.SplashScreen
 import com.example.gym.ui.WorkoutScreen
 
 
@@ -33,6 +34,11 @@ fun GymNavHost() {
                 WorkoutScreen(gymActivityId = id, navHostController = navController)
             }
 
+        }
+        composable(Screen.Splash.route) {
+            SplashScreen(navHostController = navController, startApp = {
+                navController.navigate(Screen.Launcher.route)
+            })
         }
 
     }

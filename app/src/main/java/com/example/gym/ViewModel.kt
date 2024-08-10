@@ -67,7 +67,7 @@ class ViewModel {
                 CORE
             ),
             "150 kcal",
-            R.drawable.pic_4,
+            R.drawable.pic_4_3,
             R.drawable.pic_4_ov,
             "Intermediate",
             "Strengthen your core in just ${getActivityDuration(CORE)}. Build stability and enhance every movement with this focused, intermediate workout."
@@ -161,7 +161,7 @@ class ViewModel {
                 Exercise(
                     3,
                     30.minutes,
-                    R.drawable.pic_4_3
+                    R.drawable.pic_4
                 ),
             )
         )

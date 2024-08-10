@@ -18,4 +18,5 @@ enum class BottomNavScreen(
 enum class Screen(val route: String) {
     Launcher("launcher"),
     Workout("workout/{id}"),
+    Splash("splash"),
 }

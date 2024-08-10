@@ -30,7 +30,7 @@ fun GymNavHost() {
             arguments = listOf(navArgument("id") { type = NavType.IntType })
         ) {
             navController.currentBackStackEntry?.arguments?.getInt("id")?.let { id ->
-                WorkoutScreen(gymActivityId = id)
+                WorkoutScreen(gymActivityId = id, navHostController = navController)
             }
 
         }

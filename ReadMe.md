@@ -21,6 +21,7 @@
 
 - drag and drop images into the drawable folder
 - For png icons add it as an imageAsset using action bar and tab icons option
+- For big images use coil asyncImage to load the image
 
 ### 4. Adding a bottom navigation bar
 

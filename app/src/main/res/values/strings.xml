@@ -15,4 +15,5 @@
     <string name="profile">Profile</string>
     <string name="cart">Cart</string>
     <string name="favorites">Favourites</string>
+    <string name="exercises">Exercises</string>
 </resources>

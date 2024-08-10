@@ -58,6 +58,7 @@ import com.example.gym.theme.GymTheme
 import com.example.gym.theme.searchFieldColors
 import com.example.gym.ui.navigation.BottomNavScreen
 import com.example.gym.ui.navigation.Screen
+import kotlin.time.Duration
 
 @Composable
 fun HomeScreen(
@@ -267,27 +268,37 @@ fun OtherWorkouts(
                                 style = MaterialTheme.typography.bodyMedium
                             )
 
-                            Row(horizontalArrangement = spacedBy(8.dp)) {
-
-                                TextItem(
-                                    text = it.time.toString(),
-                                )
-
-                                TextItem(
-                                    text = it.calorieBurns,
-                                )
-
-                                TextItem(
-                                    text = stringResource(
-                                        id = R.string.current_exercise, it.exercises
-                                    ),
-                                )
-                            }
+                            ActivityFacts(it.time, it.calorieBurns, it.exercises)
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ActivityFacts(
+    duration: Duration,
+    calorieBurns: String,
+    numberOfExercises: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier, horizontalArrangement = spacedBy(8.dp)) {
+
+        TextItem(
+            text = duration.toString(),
+        )
+
+        TextItem(
+            text = calorieBurns,
+        )
+
+        TextItem(
+            text = stringResource(
+                id = R.string.current_exercise, numberOfExercises
+            ),
+        )
     }
 }
 

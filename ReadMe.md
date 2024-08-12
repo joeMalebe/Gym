@@ -1,3 +1,12 @@
+Splash screen             |  Kickstart        |
+:-------------------------:|:-------------------------:
+![splashScreen](https://github.com/user-attachments/assets/3b9dc800-0933-47e8-8f2b-94a26524b971)  |  ![launcher](https://github.com/user-attachments/assets/052fd293-b5e2-499f-89c2-cb6da17e8824) | 
+
+Home dashboard           |  Workout details         |
+:-------------------------:|:-------------------------:
+![dashboard](https://github.com/user-attachments/assets/338625d1-ecd0-4474-82f2-3ed99252e007)| ![workoutScreen](https://github.com/user-attachments/assets/2a4ed554-42fd-4de3-b740-c2581ce51beb)
+  
+
 ## Challenges
 
 ### 1. Navigating between screens. Creating the navigation host

@@ -2,13 +2,8 @@
 
 package com.example.gym.ui
 
-import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,21 +36,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.gym.Exercise
 import com.example.gym.GymActivity
 import com.example.gym.R
 import com.example.gym.ViewModel
+import com.example.gym.constants.AnimationScope
+import com.example.gym.constants.FakeTransitionScopePair
 import com.example.gym.theme.GymTheme
 
 @Composable
-fun SharedTransitionScope.WorkoutScreen(
+fun WorkoutScreen(
     gymActivityId: Int,
     viewModel: ViewModel = ViewModel(),
-    onBackClick: () -> Unit,
-    animatedVisibilityScope: AnimatedContentScope
+    onBackClick: () -> Unit
 ) {
     val gymActivity = viewModel.getUserGymActivities(activityId = gymActivityId)
     val exercises = viewModel.getExercises(gymActivityId)
@@ -65,11 +60,10 @@ fun SharedTransitionScope.WorkoutScreen(
         ) {
 
             WorkoutScreenContent(
-                    modifier = Modifier.padding(16.dp),
-                    gymActivity = gymActivity,
+                gymActivity = gymActivity,
                 exercises = exercises,
-                animatedVisibilityScope = animatedVisibilityScope
-                )
+                modifier = Modifier.padding(16.dp)
+            )
             MenuItems(onBackClick = onBackClick)
 
         }
@@ -101,35 +95,38 @@ private fun MenuItems(onBackClick: () -> Unit) {
 }
 
 @Composable
-fun SharedTransitionScope.WorkoutScreenContent(
+fun WorkoutScreenContent(
     gymActivity: GymActivity,
     exercises: List<Exercise>,
     modifier: Modifier = Modifier,
-    animatedVisibilityScope: AnimatedContentScope,
 ) {
+    val animatedVisibilityScopes = AnimationScope.current.first
+    val sharedTransitionScope = AnimationScope.current.second
     Column(Modifier.fillMaxWidth()) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.4f, false)
         ) {
-            Image(
-                painter = painterResource(id = gymActivity.image),
-                contentDescription = gymActivity.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .sharedElement(
-                        state = rememberSharedContentState(key = "image/${gymActivity.id}"),
-                        animatedVisibilityScope = animatedVisibilityScope,
-                        boundsTransform = { _, _ ->
-                            tween(
-                                durationMillis = 500,
-                                easing = FastOutLinearInEasing
-                            )
-                        }
-                    )
-            )
+            with(sharedTransitionScope) {
+                Image(
+                    painter = painterResource(id = gymActivity.image),
+                    contentDescription = gymActivity.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .sharedElement(
+                            state = rememberSharedContentState(key = "image/${gymActivity.id}"),
+                            animatedVisibilityScope = animatedVisibilityScopes,
+                            boundsTransform = { _, _ ->
+                                tween(
+                                    durationMillis = 500,
+                                    easing = FastOutLinearInEasing
+                                )
+                            }
+                        )
+                )
+            }
 
             Box(
                 modifier = Modifier
@@ -239,8 +236,10 @@ private fun GymActivityFacts(gymActivity: GymActivity, modifier: Modifier = Modi
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 fun WorkoutScreenPreview() {
-    GymTheme {
 
-        //WorkoutScreen(4, animatedVisibilityScope = this)
+    CompositionLocalProvider(value = AnimationScope provides FakeTransitionScopePair) {
+        GymTheme {
+            WorkoutScreen(4) {}
+        }
     }
 }

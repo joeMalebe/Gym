@@ -2,9 +2,7 @@
 
 package com.example.gym.ui
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -38,6 +36,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,15 +60,15 @@ import com.example.gym.GymMetric
 import com.example.gym.Profile
 import com.example.gym.R
 import com.example.gym.ViewModel
+import com.example.gym.constants.AnimationScope
+import com.example.gym.constants.FakeTransitionScopePair
 import com.example.gym.theme.GymTheme
 import com.example.gym.theme.searchFieldColors
 import com.example.gym.ui.navigation.BottomNavScreen
 import kotlin.time.Duration
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.HomeScreen(
-    animatedVisibilityScope: AnimatedVisibilityScope,
+fun HomeScreen(
     viewModel: ViewModel = ViewModel(),
     navController: NavHostController = rememberNavController(),
     onWorkoutSelected: (GymActivity) -> Unit
@@ -87,25 +86,23 @@ fun SharedTransitionScope.HomeScreen(
             HomeContent(
                 viewModel.getUser(),
                 search = search,
+                onSearchTextChange = { search = it },
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(16.dp),
-                onSearchTextChange = { search = it },
-                onWorkoutSelected = onWorkoutSelected,
-                animatedVisibilityScope = animatedVisibilityScope
+                onWorkoutSelected = onWorkoutSelected
             )
         }
     }
 }
 
 @Composable
-fun SharedTransitionScope.HomeContent(
+fun HomeContent(
     user: Profile,
     search: String,
     onSearchTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onWorkoutSelected: (GymActivity) -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    onWorkoutSelected: (GymActivity) -> Unit
 ) {
     LazyColumn(
         modifier,
@@ -118,8 +115,7 @@ fun SharedTransitionScope.HomeContent(
         item {
             OtherWorkouts(
                 user.activities,
-                onWorkoutSelected = onWorkoutSelected,
-                animatedVisibilityScope = animatedVisibilityScope
+                onWorkoutSelected = onWorkoutSelected
             )
         }
     }
@@ -243,13 +239,13 @@ fun LastSeenActivity(gymActivity: GymActivity, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SharedTransitionScope.OtherWorkouts(
+fun OtherWorkouts(
     workouts: List<GymActivity>,
     modifier: Modifier = Modifier,
-    onWorkoutSelected: (GymActivity) -> Unit,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    onWorkoutSelected: (GymActivity) -> Unit
 ) {
-
+    val animatedVisibilityScopes = AnimationScope.current.first
+    val sharedTransitionScope = AnimationScope.current.second
     Column(modifier.heightIn(min = 200.dp, max = 320.dp), verticalArrangement = spacedBy(16.dp)) {
         Text(
             text = stringResource(id = R.string.other_workouts),
@@ -268,25 +264,27 @@ fun SharedTransitionScope.OtherWorkouts(
                                 .weight(0.8f)
                                 .fillMaxSize()
                         ) {
-                            Image(
-                                painter = painterResource(id = it.image),
-                                contentDescription = it.title,
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.medium)
-                                    .fillMaxSize()
-                                    .sharedElement(
-                                        state = rememberSharedContentState(
-                                            key = "image/${it.id}"
-                                        ), animatedVisibilityScope = animatedVisibilityScope,
-                                        boundsTransform = { _, _ ->
-                                            tween(
-                                                durationMillis = 500,
-                                                easing = FastOutLinearInEasing
-                                            )
-                                        }
-                                    ),
-                                contentScale = ContentScale.Crop
-                            )
+                            with(sharedTransitionScope) {
+                                Image(
+                                    painter = painterResource(id = it.image),
+                                    contentDescription = it.title,
+                                    modifier = Modifier
+                                        .clip(MaterialTheme.shapes.medium)
+                                        .fillMaxSize()
+                                        .sharedElement(
+                                            state = rememberSharedContentState(
+                                                key = "image/${it.id}"
+                                            ), animatedVisibilityScope = animatedVisibilityScopes,
+                                            boundsTransform = { _, _ ->
+                                                tween(
+                                                    durationMillis = 500,
+                                                    easing = FastOutLinearInEasing
+                                                )
+                                            }
+                                        ),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
                         Column(Modifier.weight(0.2f), verticalArrangement = spacedBy(8.dp)) {
                             Text(
@@ -404,11 +402,14 @@ private fun NavLabelTextItem(text: String, modifier: Modifier = Modifier) {
 @Composable
 @Preview(showBackground = true, heightDp = 1000)
 fun HomeScreenPreview() {
-    GymTheme {
-        /*HomeScreen(
-            animatedVisibilityScope = ,
-        )*/
+    CompositionLocalProvider(value = AnimationScope provides FakeTransitionScopePair) {
+
+
+        GymTheme {
+            HomeScreen {}
+        }
     }
+
 }
 
 

@@ -1,10 +1,5 @@
-Splash screen             |  Kickstart        |
-:-------------------------:|:-------------------------:
-![splashScreen](https://github.com/user-attachments/assets/3b9dc800-0933-47e8-8f2b-94a26524b971)  |  ![launcher](https://github.com/user-attachments/assets/052fd293-b5e2-499f-89c2-cb6da17e8824) | 
+![Screenshot 2024-08-17 at 18 36 49](https://github.com/user-attachments/assets/db995056-b360-47dd-9453-9a9cbf9456b6)
 
-Home dashboard           |  Workout details         |
-:-------------------------:|:-------------------------:
-![dashboard](https://github.com/user-attachments/assets/338625d1-ecd0-4474-82f2-3ed99252e007)| ![workoutScreen](https://github.com/user-attachments/assets/2a4ed554-42fd-4de3-b740-c2581ce51beb)
   
 
 ## Challenges
